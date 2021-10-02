@@ -259,6 +259,7 @@ public class testWindowDemo {
 		player.setFrame(frame);
 		player.setMun(2);
 		player.init();
+		/**/
 
 	}
 }
