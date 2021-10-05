@@ -1,17 +1,27 @@
 package dvi.amazingsora.test;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import dvi.amazingsora.Monopoly.MenuFrame.MonopolyMenu;
 import dvi.amazingsora.Monopoly.model.Grid;
 import dvi.amazingsora.Monopoly.model.Player;
 
-public class testWindowDemo {
+public class testWindowDemo  extends JFrame implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static testWindowDemo window;
 
 	private JFrame frame;
 	private JTextField box1;
@@ -54,7 +64,7 @@ public class testWindowDemo {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					testWindowDemo window = new testWindowDemo();
+					window = new testWindowDemo();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,6 +84,7 @@ public class testWindowDemo {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+
 		frame = new JFrame();
 		frame.setBounds(100, 100, 897, 732);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,4 +111,30 @@ public class testWindowDemo {
 		/**/
 
 	}
+
+	public static testWindowDemo getWindow() {
+		return window;
+	}
+
+	public static void setWindow(testWindowDemo window) {
+		testWindowDemo.window = window;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
+	
 }
