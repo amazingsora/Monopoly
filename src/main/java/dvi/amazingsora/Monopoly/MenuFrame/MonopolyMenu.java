@@ -3,12 +3,9 @@ package dvi.amazingsora.Monopoly.MenuFrame;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import dvi.amazingsora.test.T1.*;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import dvi.amazingsora.test.testWindowDemo;
 
@@ -23,7 +20,6 @@ public class MonopolyMenu extends JFrame implements ActionListener {
 	private JButton btnNewButton;
 
 	private JFrame frame;
-	private static MonopolyMenu window;
 
 	/**
 	 * Launch the application.
@@ -32,7 +28,7 @@ public class MonopolyMenu extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					 window = new MonopolyMenu();
+					MonopolyMenu window = new MonopolyMenu();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,13 +69,23 @@ public class MonopolyMenu extends JFrame implements ActionListener {
 		if (jb == btnNewButton) {
 			// 隐藏关闭菜单窗口
 
-			window.frame.setVisible(false);
-			window.frame.dispose();
+			this.frame.setVisible(false);
+			this.frame.dispose();
 
 			 new testWindowDemo().getFrame().setVisible(true);
 		}
 
 	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	
 	
 	
 	

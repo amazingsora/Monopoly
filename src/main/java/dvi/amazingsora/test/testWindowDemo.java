@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -14,14 +12,14 @@ import javax.swing.JTextField;
 import dvi.amazingsora.Monopoly.MenuFrame.MonopolyMenu;
 import dvi.amazingsora.Monopoly.model.Grid;
 import dvi.amazingsora.Monopoly.model.Player;
+import javax.swing.JButton;
 
-public class testWindowDemo  extends JFrame implements ActionListener{
+public class testWindowDemo extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static testWindowDemo window;
 
 	private JFrame frame;
 	private JTextField box1;
@@ -56,22 +54,11 @@ public class testWindowDemo  extends JFrame implements ActionListener{
 	private JTextField box7;
 	private JTextField box29;
 	private JTextField box33;
+	private JButton backbtn;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					window = new testWindowDemo();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -95,11 +82,16 @@ public class testWindowDemo  extends JFrame implements ActionListener{
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
-
 		try {
 			Grid grid = new Grid();
 
 			grid.init(panel);
+
+			backbtn = new JButton("返回");
+			backbtn.setBounds(784, 27, 87, 23);
+			frame.getContentPane().add(backbtn);
+			backbtn.addActionListener(this);
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,14 +102,6 @@ public class testWindowDemo  extends JFrame implements ActionListener{
 		player.init();
 		/**/
 
-	}
-
-	public static testWindowDemo getWindow() {
-		return window;
-	}
-
-	public static void setWindow(testWindowDemo window) {
-		testWindowDemo.window = window;
 	}
 
 	public JFrame getFrame() {
@@ -131,10 +115,18 @@ public class testWindowDemo  extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		JButton jb = (JButton) e.getSource();
+
+		if (jb == backbtn) {
+			// 隐藏关闭菜单窗口
+
+			this.frame.setVisible(false);
+			this.frame.dispose();
+
+			MonopolyMenu game = new MonopolyMenu();
+			game.getFrame().setVisible(true);
+
+		}
+
 	}
-
-
-	
-	
 }
