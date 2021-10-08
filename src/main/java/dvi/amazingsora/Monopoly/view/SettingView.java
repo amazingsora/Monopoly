@@ -1,19 +1,21 @@
 package dvi.amazingsora.Monopoly.view;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
-import dvi.amazingsora.Monopoly.MenuFrame.MonopolyMenu;
-import dvi.amazingsora.Monopoly.model.DataSaveObject;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import dvi.amazingsora.Monopoly.model.DataSaveObject;
 
 public class SettingView extends JPanel implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField textField;
 	JButton saveBtn;
 	/**
@@ -37,9 +39,10 @@ public class SettingView extends JPanel implements ActionListener{
 		textField.setBounds(81, 76, 96, 21);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
+		textField.setText(String.valueOf(DataSaveObject.getSetting().getPlayerCount()));
 		
 		saveBtn = new JButton("儲存後返回");
-		saveBtn.setBounds(276, 212, 150, 66);
+		saveBtn.setBounds(276, 150, 150, 66);
 		saveBtn.addActionListener(this);
 		
 		frame.getContentPane().add(saveBtn);
@@ -53,7 +56,7 @@ public class SettingView extends JPanel implements ActionListener{
 		JButton jb = (JButton) e.getSource();
 
 		if (jb == saveBtn) {
-			DataSaveObject.getSetting().setPlayerCount(3);
+			DataSaveObject.getSetting().setPlayerCount(Integer.valueOf(textField.getText()));
 			frame.setVisible(false);
 			new MonopolyMeum(new JFrame());
 

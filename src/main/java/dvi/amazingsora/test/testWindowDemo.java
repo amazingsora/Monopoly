@@ -124,7 +124,7 @@ public class testWindowDemo extends JFrame implements ActionListener {
 			this.frame.dispose();
 
 			MonopolyMenu game = new MonopolyMenu();
-			game.getFrame().setVisible(true);
+//			game.getFrame().setVisible(true);
 
 		}
 

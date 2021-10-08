@@ -4,8 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import dvi.amazingsora.Monopoly.model.DataSaveObject;
-
 public class MainWindow {
 	int playerCount;
 	private JFrame frame;

@@ -1,5 +1,7 @@
 package dvi.amazingsora.Monopoly.util;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,4 +54,5 @@ public class FileUtil {
 //		readFile("data/coordinate.txt");
 		System.out.println(getCoordinatedata(readFileInputStream("data/coordinate.txt")));
 	}
+
 }

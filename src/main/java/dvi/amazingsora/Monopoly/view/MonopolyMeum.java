@@ -8,10 +8,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MonopolyMeum extends JPanel {
-	private JFrame frame;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public MonopolyMeum(JFrame frame) {
-		this.frame = frame;
+		System.out.println("開啟");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -36,7 +39,7 @@ public class MonopolyMeum extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
-				new SettingView(frame);
+				new SettingView(new JFrame());
 
 			}
 		});
