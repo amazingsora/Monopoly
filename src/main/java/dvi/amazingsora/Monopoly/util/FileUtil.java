@@ -49,6 +49,8 @@ public class FileUtil {
 		}
 		return result;
 	}
+	
+	
 
 	public static void main(String[] args) throws IOException {
 //		readFile("data/coordinate.txt");

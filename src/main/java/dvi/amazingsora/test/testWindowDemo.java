@@ -96,10 +96,6 @@ public class testWindowDemo extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Player player = new Player(4000, "test", "test", 4000);
-		player.setFrame(frame);
-		player.setMun(2);
-		player.init();
 		/**/
 
 	}

@@ -1,6 +1,7 @@
 package dvi.amazingsora.Monopoly.model;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,10 +10,13 @@ import javax.swing.JTextField;
 
 import org.apache.commons.collections4.MapUtils;
 
+import dvi.amazingsora.Monopoly.controller.GameController;
 import dvi.amazingsora.Monopoly.util.FileUtil;
 
 public class Grid {
 	public void init(JPanel panel) throws IOException {
+		int loc = 0; //格子
+		GameController.setGridMap(new HashMap<String, JTextField>());
 		System.out.println("初始化地圖");
 		try {
 			List<Map<String, String>> coordinatedata = FileUtil
@@ -29,7 +33,10 @@ public class Grid {
 				}
 				box.setBounds(getCoordinate(data, "X"), getCoordinate(data, "Y"), width, length);
 				panel.add(box);
+				
 				box.setColumns(10);
+				GameController.getGridMap().put("loc"+loc, box);
+				loc++;
 			}
 
 		}
