@@ -1,12 +1,14 @@
 package dvi.amazingsora.Monopoly.model;
 
+import java.awt.Image;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 
 import org.apache.commons.collections4.MapUtils;
 
@@ -14,16 +16,21 @@ import dvi.amazingsora.Monopoly.controller.GameController;
 import dvi.amazingsora.Monopoly.util.FileUtil;
 
 public class Grid {
-	public void init(JPanel panel) throws IOException {
-		int loc = 0; //格子
-		GameController.setGridMap(new HashMap<String, JTextField>());
+	public void init(JLayeredPane panel) throws IOException {
+		int loc = 0; // 格子
+		GameController.setGridMap(new HashMap<String, JLayeredPane>());
+
+		// 地圖座標參數
+		DataSaveObject.setCoordinateMap(new HashMap<Integer, Coordinate>());
+
 		System.out.println("初始化地圖");
 		try {
 			List<Map<String, String>> coordinatedata = FileUtil
 					.getCoordinatedata(FileUtil.readFileInputStream("data/coordinate.txt"));
 
 			for (Map<String, String> data : coordinatedata) {
-				JTextField box = new JTextField();
+
+				JLabel box = new JLabel();
 				int width = 57;
 				int length = 48;
 				if (getCoordinate(data, "X") == 144 && getCoordinate(data, "Y") == 10) {
@@ -31,11 +38,24 @@ public class Grid {
 					length *= 2;
 
 				}
+				Coordinate c = new Coordinate();
+				c.setLength(getCoordinate(data, "Y"));
+				c.setWidth(getCoordinate(data, "X"));
+				DataSaveObject.getCoordinateMap().put(loc, c);
 				box.setBounds(getCoordinate(data, "X"), getCoordinate(data, "Y"), width, length);
-				panel.add(box);
-				
-				box.setColumns(10);
-				GameController.getGridMap().put("loc"+loc, box);
+				panel.add(box, Integer.valueOf(10));
+
+				// 土地圖
+				byte[] imageData = null;
+				imageData = FileUtil.inputStreamToByte(FileUtil.readFileInputStream("pic/land.png"));
+				ImageIcon image = new ImageIcon(imageData);
+				Image img = image.getImage();
+				img = img.getScaledInstance(width, length, Image.SCALE_DEFAULT);
+				image.setImage(img);
+
+
+				box.setIcon(image);
+				GameController.getGridMap().put("loc" + loc, panel);
 				loc++;
 			}
 

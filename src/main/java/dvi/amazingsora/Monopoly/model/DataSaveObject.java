@@ -1,10 +1,11 @@
 package dvi.amazingsora.Monopoly.model;
 
+import java.util.Map;
+
 public class DataSaveObject {
 	//設置紀錄
 	static SettingObject setting = new SettingObject();
-	static Player[] turnsList ;
-
+	static Map<Integer,Coordinate> coordinateMap;
 	public static SettingObject getSetting() {
 		return setting;
 	}
@@ -13,12 +14,13 @@ public class DataSaveObject {
 		DataSaveObject.setting = setting;
 	}
 
-	public static Player[] getTurnsList() {
-		return turnsList;
+	
+	public static Map<Integer, Coordinate> getCoordinateMap() {
+		return coordinateMap;
 	}
 
-	public static void setTurnsList(int count) {
-		DataSaveObject.turnsList = new Player[count];
+	public static void setCoordinateMap(Map<Integer, Coordinate> coordinateMap) {
+		DataSaveObject.coordinateMap = coordinateMap;
 	}
 
 	

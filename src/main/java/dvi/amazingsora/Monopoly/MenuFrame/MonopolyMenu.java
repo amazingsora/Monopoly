@@ -1,12 +1,12 @@
 package dvi.amazingsora.Monopoly.MenuFrame;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.CardLayout;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
-import dvi.amazingsora.test.testWindowDemo;
 import javax.swing.JPanel;
 
 public class MonopolyMenu extends JFrame  {
@@ -73,32 +73,12 @@ public class MonopolyMenu extends JFrame  {
 		
 		
 		frame.getContentPane().add(settingButton);
-//		settingButton.addActionListener(this);
 		startGameButton = new JButton("開始遊戲");
 		startGameButton.setBounds(10, 10, 81, 23);
 		frame.getContentPane().add(startGameButton);
-//		startGameButton.addActionListener(this);
 
 
 	}
 
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		// TODO Auto-generated method stub
-//		JButton jb = (JButton) e.getSource();
-//
-//		if (jb == startGameButton) {
-//			System.out.println("開啟");
-//
-//			// 隐藏关闭菜单窗口
-//			this.setVisible(false);
-//			this.dispose();
-//			new testWindowDemo().getFrame().setVisible(true);
-//		}
-//		if (jb == settingButton) {
-//
-//			cardLayout.show(panel, "s1");
-//		}
-//	}
 
 }

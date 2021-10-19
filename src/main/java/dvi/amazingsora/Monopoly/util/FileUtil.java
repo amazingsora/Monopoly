@@ -50,7 +50,18 @@ public class FileUtil {
 		return result;
 	}
 	
-	
+	public static byte[] inputStreamToByte(InputStream is) throws Exception {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		byte[] a = new byte[1000];
+		int len = 0;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		while ((len = bis.read(a)) != -1) {
+			bos.write(a, 0, len);
+		}
+		bis.close();
+		bos.close();
+		return bos.toByteArray();
+	}
 
 	public static void main(String[] args) throws IOException {
 //		readFile("data/coordinate.txt");

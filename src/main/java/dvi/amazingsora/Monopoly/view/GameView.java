@@ -7,15 +7,18 @@ import java.security.SecureRandom;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import dvi.amazingsora.Monopoly.controller.GameController;
 import dvi.amazingsora.Monopoly.model.DataSaveObject;
 import dvi.amazingsora.Monopoly.model.Grid;
 import dvi.amazingsora.Monopoly.model.Player;
-import javax.swing.JLabel;
 
-public class GameView extends JPanel implements ActionListener {
+public class GameView extends JPanel implements ActionListener ,ChangeListener{
 
 	/**
 	 * Create the panel.
@@ -30,20 +33,23 @@ public class GameView extends JPanel implements ActionListener {
 	JButton jb1, jb2;
 	JButton backBtn;
 	JFrame frame;
+	Timer timer;
+	int dicemun = 0;
 
 	public GameView(JFrame frame) {
-		
+		GameController.INSTANCE.setinit();
+		// 設定當前回合
 		frame = new JFrame();
 		this.frame = frame;
 		frame.setBounds(100, 100, 950, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
-		JPanel gameView = new JPanel();
+
+		JLayeredPane gameView = new JLayeredPane();
 		gameView.setBounds(150, 173, 563, 472);
 		frame.getContentPane().add(gameView);
 		gameView.setLayout(null);
-		
+
 		this.setLayout(null);
 		try {
 			Grid grid = new Grid();
@@ -59,47 +65,70 @@ public class GameView extends JPanel implements ActionListener {
 			backBtn.setBounds(10, 59, 181, 53);
 			backBtn.addActionListener(this);
 			panel.add(backBtn);
-			
+
 			JPanel dicePanel = new JPanel();
 			dicePanel.setBounds(723, 173, 201, 154);
 			frame.getContentPane().add(dicePanel);
 			dicePanel.setLayout(null);
-			
+
+			// 遊戲控制器
+			GameController.INSTANCE.createPlayers(frame);
+			GameController.INSTANCE.setPlayLocIcon(gameView);
+
 			JButton dice = new JButton("按下骰子");
 			dice.setBounds(10, 22, 87, 23);
 			dicePanel.add(dice);
+			// 取得當前玩家
+
+			 timer = new Timer(300, this);
+
 			dice.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					// 骰子數
 					SecureRandom objSecureRandom = new SecureRandom();
-				      int random = objSecureRandom.nextInt(6);
-				      System.out.println("結果 =="+random);
-				      GameController.getGridMap().get("loc"+random).setText("loc");
-				      
-				      
+					int random = objSecureRandom.nextInt(6) + 1;
+					System.out.println("骰出 "+random+" 點");
+					dicemun = random;
+
+					timer.start();
+
 				}
 			});
-		
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//遊戲控制器
-		GameController.INSTANCE.createPlayers(frame);
+
 		frame.setVisible(true);
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton jb = (JButton) e.getSource();
+		if (e.getSource() instanceof JButton) {
+			if (e.getSource() == backBtn) {
+				frame.setVisible(false);
+				new MonopolyMeum(new JFrame());
 
-		if (jb == backBtn) {
-			frame.setVisible(false);
-			new MonopolyMeum(new JFrame());
+			}
+		}
 
+		if (e.getSource() instanceof Timer) {
+			if (e.getSource() == timer) {
+				if(dicemun ==0) {
+					timer.stop();
+					GameController.INSTANCE.setPlusRound();
+
+
+				}else {
+					GameController.INSTANCE.move();
+					dicemun--;
+				}			
+				
+			}
 		}
 
 	}
@@ -118,5 +147,10 @@ public class GameView extends JPanel implements ActionListener {
 
 	public void setBackBtn(JButton backBtn) {
 		this.backBtn = backBtn;
+	}
+	public void stateChanged(ChangeEvent e1)    //实现事件监听器接口中的方法
+	{
+		System.out.println("擲骰子");
+
 	}
 }
