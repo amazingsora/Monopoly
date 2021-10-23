@@ -17,7 +17,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dvi.amazingsora.Monopoly.model.DataSaveObject;
+import dvi.amazingsora.Monopoly.model.GridObject;
 import dvi.amazingsora.Monopoly.model.Player;
 import dvi.amazingsora.Monopoly.util.FileUtil;
 
@@ -27,6 +30,11 @@ public class GameController {
 	public static Map<String, JLayeredPane> gridMap;
 	// 玩家參數
 	public static Map<Integer, Player> playerMap;
+	// 地圖數據
+	public static Map<Integer, GridObject> gridData;
+	// 玩家金錢數據
+	public static Map<Integer, JTextField> Assets;
+
 
 	static int nowRound = 0;
 	
@@ -39,9 +47,7 @@ public class GameController {
 		int playCount = DataSaveObject.getSetting().getPlayerCount();
 		int loc = 10;
 		setPlayerMap(new HashMap<Integer, Player>());
-
-		
-		
+		setAssets(new HashMap<Integer, JTextField>());
 		for (int i = 0; i < playCount; i++) {
 			Player player = new Player(4000, "player" + (i + 1), "LIVE", 4000, false, i);
 
@@ -114,7 +120,8 @@ public class GameController {
 			moneyField.setColumns(10);
 			moneyField.setEditable(false);
 			moneyField.setText(player.getMoney() + "");
-
+			getAssets().put(i, moneyField);
+			
 			loc += 228;
 		}
 		System.out.println("玩家圖案人數= =="+getPlayerMap().size());
@@ -151,7 +158,6 @@ public class GameController {
 	}
 	public void move() {
 		if(nowRound>=DataSaveObject.getSetting().getPlayerCount()) {
-			System.out.println("變更");
 			nowRound =nowRound- DataSaveObject.getSetting().getPlayerCount();
 			if(nowRound<0) {
 				nowRound = 0;
@@ -179,6 +185,28 @@ public class GameController {
 			gameView.add(GameController.getPlayerMap().get(i).getIconLabel(), Integer.valueOf(15));
 
 		}
+	}
+	
+	public void launchEffect() {
+		if(nowRound>=DataSaveObject.getSetting().getPlayerCount()) {
+			nowRound =nowRound- DataSaveObject.getSetting().getPlayerCount();
+			if(nowRound<0) {
+				nowRound = 0;
+			}
+		}
+		Player nowGuy = GameController.getPlayerMap().get(nowRound);
+		
+		
+		GridObject grid = GameController.getGridData().get(nowGuy.getLoc());
+		String status = grid.getStatus();
+		if(StringUtils.equals(status, "M")) {
+			int nowMpney = nowGuy.getMoney();
+			nowGuy.setMoney(nowMpney+grid.getValue());
+			JTextField momeyField = getAssets().get(nowRound);
+			momeyField.setText((nowMpney+grid.getValue())+"");
+			System.out.println("第"+nowRound+"位玩家的 金額:"+nowGuy.getMoney());
+		}
+
 	}
 	
 	
@@ -215,10 +243,10 @@ public class GameController {
 		
 		return nowRound;
 	}
-	public static void setNowRound(int nowRound) {
+	public  void setNowRound(int nowRound) {
 		GameController.nowRound = nowRound;
 	}
-	public static void setPlusRound() {
+	public  void setPlusRound() {
 		GameController.nowRound+=1;
 	}
 	public static void setinit() {
@@ -235,6 +263,18 @@ public class GameController {
 	}
 	public void setLocY(int[] locY) {
 		this.locY = locY;
+	}
+	public static Map<Integer, GridObject> getGridData() {
+		return gridData;
+	}
+	public static void setGridData(Map<Integer, GridObject> gridData) {
+		GameController.gridData = gridData;
+	}
+	public static Map<Integer, JTextField> getAssets() {
+		return Assets;
+	}
+	public static void setAssets(Map<Integer, JTextField> assets) {
+		Assets = assets;
 	}
 	
 }

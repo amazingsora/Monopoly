@@ -23,6 +23,8 @@ public class Grid {
 		// 地圖座標參數
 		DataSaveObject.setCoordinateMap(new HashMap<Integer, Coordinate>());
 
+		//設定地圖資訊
+		GameController.setGridData(new HashMap<Integer, GridObject>());
 		System.out.println("初始化地圖");
 		try {
 			List<Map<String, String>> coordinatedata = FileUtil
@@ -56,6 +58,12 @@ public class Grid {
 
 				box.setIcon(image);
 				GameController.getGridMap().put("loc" + loc, panel);
+				GridObject gridData = new GridObject();
+				gridData.setStatus("M");
+				gridData.setValue(-1000);
+
+				GameController.getGridData().put(loc, gridData);
+
 				loc++;
 			}
 

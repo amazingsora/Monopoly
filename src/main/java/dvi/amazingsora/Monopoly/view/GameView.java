@@ -37,8 +37,9 @@ public class GameView extends JPanel implements ActionListener ,ChangeListener{
 	int dicemun = 0;
 
 	public GameView(JFrame frame) {
-		GameController.INSTANCE.setinit();
 		// 設定當前回合
+		GameController.setinit();
+		
 		frame = new JFrame();
 		this.frame = frame;
 		frame.setBounds(100, 100, 950, 800);
@@ -53,7 +54,7 @@ public class GameView extends JPanel implements ActionListener ,ChangeListener{
 		this.setLayout(null);
 		try {
 			Grid grid = new Grid();
-
+			//方格初始化
 			grid.init(gameView);
 
 			JPanel panel = new JPanel();
@@ -93,7 +94,7 @@ public class GameView extends JPanel implements ActionListener ,ChangeListener{
 					dicemun = random;
 
 					timer.start();
-
+		
 				}
 			});
 
@@ -120,8 +121,11 @@ public class GameView extends JPanel implements ActionListener ,ChangeListener{
 			if (e.getSource() == timer) {
 				if(dicemun ==0) {
 					timer.stop();
+					GameController.INSTANCE.launchEffect();
+					//下一回合設定
 					GameController.INSTANCE.setPlusRound();
-
+					
+					
 
 				}else {
 					GameController.INSTANCE.move();
