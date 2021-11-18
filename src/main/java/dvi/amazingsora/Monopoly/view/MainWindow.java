@@ -1,8 +1,11 @@
 package dvi.amazingsora.Monopoly.view;
 
 import java.awt.EventQueue;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
+
+import dvi.amazingsora.Monopoly.model.DataSaveObject;
 
 public class MainWindow {
 	int playerCount;
@@ -12,6 +15,7 @@ public class MainWindow {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		DataSaveObject.setInit();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

@@ -4,7 +4,7 @@ public class GridObject {
 	String status ;
 	int value;
 	int level;
-	String belong;
+	Integer belong;
 	public String getStatus() {
 		return status;
 	}
@@ -24,11 +24,12 @@ public class GridObject {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	public String getBelong() {
+	public Integer getBelong() {
 		return belong;
 	}
-	public void setBelong(String belong) {
+	public void setBelong(Integer belong) {
 		this.belong = belong;
 	}
+	
 	
 }

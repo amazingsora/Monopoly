@@ -18,7 +18,7 @@ import dvi.amazingsora.Monopoly.util.FileUtil;
 public class Grid {
 	public void init(JLayeredPane panel) throws IOException {
 		int loc = 0; // 格子
-		GameController.setGridMap(new HashMap<String, JLayeredPane>());
+		GameController.setGridMap(new HashMap<String, JLabel>());
 
 		// 地圖座標參數
 		DataSaveObject.setCoordinateMap(new HashMap<Integer, Coordinate>());
@@ -57,12 +57,10 @@ public class Grid {
 
 
 				box.setIcon(image);
-				GameController.getGridMap().put("loc" + loc, panel);
-				GridObject gridData = new GridObject();
-				gridData.setStatus("M");
-				gridData.setValue(-1000);
+				GameController.getGridMap().put("loc" + loc, box);
+				
 
-				GameController.getGridData().put(loc, gridData);
+				GameController.getGridData().put(loc, setLandEff());
 
 				loc++;
 			}
@@ -77,6 +75,23 @@ public class Grid {
 
 	private Integer getCoordinate(Map<String, String> data, String key) {
 		return Integer.valueOf(MapUtils.getString(data, key));
+	}
+	
+	private GridObject setMoneyEff() {
+		GridObject gridData = new GridObject();
+		gridData.setStatus("M");
+		gridData.setValue(-1000);
+		return gridData;
+		
+	}
+	private GridObject setLandEff() {
+		GridObject gridData = new GridObject();
+		gridData.setStatus("L");
+		gridData.setLevel(0);
+		gridData.setValue(300);
+
+		return gridData;
+		
 	}
 
 }
