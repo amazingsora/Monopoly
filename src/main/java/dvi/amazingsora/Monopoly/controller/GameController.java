@@ -59,13 +59,15 @@ public class GameController {
 	int oriX = 0;
 	int oriY = 0;
 
+	private Player nowGuy = new Player();
+
 	public void createPlayers(JFrame frame) {
 		int playCount = DataSaveObject.getSetting().getPlayerCount();
 		int loc = 10;
 		setPlayerMap(new HashMap<Integer, Player>());
 		setAssets(new HashMap<Integer, JTextField>());
 		for (int i = 0; i < playCount; i++) {
-			Player player = new Player(4000, "player" + (i + 1), "LIVE", 4000, false, 0);
+			Player player = new Player(4000, "player" + (i + 1), "LIVE", 900, false, 0);
 			Border line = BorderFactory.createLineBorder(border[i]);
 
 			try {
@@ -148,38 +150,7 @@ public class GameController {
 		System.out.println("玩家圖案人數= ==" + getPlayerMap().size());
 	}
 
-	/**
-	 * 擲骰子
-	 * 
-	 * @param round
-	 */
-	public void throwDice() {
-		if (nowRound >= DataSaveObject.getSetting().getPlayerCount()) {
-			System.out.println("變更");
-			nowRound = nowRound - DataSaveObject.getSetting().getPlayerCount();
-			if (nowRound < 0) {
-				nowRound = 0;
-			}
-		}
-		System.out.println("第 ===" + nowRound + "位");
-		Player nowGuy = GameController.getPlayerMap().get(nowRound);
-		System.out.println("nowGuy ===" + nowGuy);
-		// 骰子數
-		SecureRandom objSecureRandom = new SecureRandom();
-		int random = objSecureRandom.nextInt(6) + 1;
-
-		System.out.println("結果 ==" + random);
-		for (int i = 0; i < random; i++) {
-			int length = DataSaveObject.getCoordinateMap().get(nowGuy.getLoc() + (i + 1)).getLength();
-			int width = DataSaveObject.getCoordinateMap().get(nowGuy.getLoc() + (i + 1)).getWidth();
-			GameController.getPlayerMap().get(nowRound).getIconLabel().setBounds(width + locX[nowRound],
-					length + locY[nowRound], 20, 15);
-
-		}
-
-		nowGuy.setLoc(nowGuy.getLoc() + random);
-		nowRound++;
-	}
+	
 
 	public void move() {
 		if (nowRound >= DataSaveObject.getSetting().getPlayerCount()) {
@@ -188,8 +159,10 @@ public class GameController {
 				nowRound = 0;
 			}
 		}
-		System.out.println("第 ===" + nowRound + "位");
-		Player nowGuy = GameController.getPlayerMap().get(nowRound);
+		nowRound = setNowGuy(nowRound);
+		
+		System.out.println("move ===>"+nowRound);
+		Player nowGuy = this.nowGuy;
 		// 骰子數
 		int loc = nowGuy.getLoc() + 1;
 
@@ -204,6 +177,7 @@ public class GameController {
 				length + locY[nowRound], 20, 15);
 
 		nowGuy.setLoc(loc);
+		System.out.println("第" + nowRound + "位位置" + nowGuy.getLoc());
 	}
 
 	public void setPlayLocIcon(JLayeredPane gameView) {
@@ -216,16 +190,31 @@ public class GameController {
 		}
 	}
 
-	public void launchEffect(JFrame frame) {
+	/**
+	 * 執行格子效果
+	 * 
+	 * @param frame
+	 * @throws Exception
+	 */
+	public void launchEffect(JFrame frame) throws Exception {
+
 		if (nowRound >= DataSaveObject.getSetting().getPlayerCount()) {
 			nowRound = nowRound - DataSaveObject.getSetting().getPlayerCount();
 			if (nowRound < 0) {
 				nowRound = 0;
 			}
 		}
-		Player nowGuy = GameController.getPlayerMap().get(nowRound);
+
+		nowRound = setNowGuy(nowRound);
+		Player nowGuy = this.nowGuy;
+		if (nowRound == 999) {
+
+			return;
+		}
 
 		GameController.setNowLoc(nowGuy.getLoc());
+		System.out.println("第" + nowRound + "位玩家的" + "現在位置+" + nowGuy.getLoc() + "__" + GameController.getNowLoc());
+		System.out.println(nowGuy);
 
 		GridObject grid = GameController.getGridData().get(nowGuy.getLoc());
 		String status = grid.getStatus();
@@ -241,23 +230,64 @@ public class GameController {
 		} else if (StringUtils.equals(status, "L")) {
 
 			if (null == grid.getBelong()) {
+				// 建立格子
 				setDialog_Land(frame, nowRound, "ddddddd", 0);
 			} else if (grid.getBelong() == nowRound) {
+				// 是否升級
 				GameController.getButtonController().get("dice").setEnabled(true);
 
 			} else {
 				int nowMpney = nowGuy.getMoney();
 				System.out.println("現在金額" + grid.getValue());
-				nowGuy.setMoney(nowMpney - grid.getValue());
-				JTextField momeyField = getAssets().get(nowRound);
-				momeyField.setText(nowGuy.getMoney() + "");
-				System.out.println("第" + nowRound + "位玩家的 金額:" + nowGuy.getMoney());
-				String msg = "第" + nowRound + "位玩家的 金額:" + nowGuy.getMoney();
-				showMessage(frame, msg, 3000);
-				GameController.getButtonController().get("dice").setEnabled(true);
+				int value = nowMpney - grid.getValue();
+				if (value > 0) {
+					nowGuy.setMoney(value);
+					JTextField momeyField = getAssets().get(nowRound);
+					momeyField.setText(nowGuy.getMoney() + "");
+					System.out.println("第" + nowRound + "位玩家的 金額:" + nowGuy.getMoney());
+					String msg = "第" + nowRound + "位玩家的 金額:" + nowGuy.getMoney();
+					showMessage(frame, msg, 3000);
+					GameController.getButtonController().get("dice").setEnabled(true);
+
+				} else {
+					nowGuy.setMoney(value);
+					JTextField momeyField = getAssets().get(nowRound);
+					momeyField.setText("BROKEN");
+					String msg = "第" + nowRound + "位玩家的 破產";
+
+					System.out.println(msg);
+					showMessage(frame, msg, 3000);
+					nowGuy.setStatus("D");
+					GameController.getButtonController().get("dice").setEnabled(true);
+
+				}
 
 			}
 		}
+	}
+
+	private int setNowGuy(int nowRound) {
+		System.out.println(nowRound);
+
+		if (nowRound >= DataSaveObject.getSetting().getPlayerCount()) {
+			nowRound = nowRound - DataSaveObject.getSetting().getPlayerCount();
+			if (nowRound < 0) {
+				nowRound = 0;
+			}
+			return nowRound;
+		} else {
+			this.nowGuy = GameController.getPlayerMap().get(nowRound);
+
+			if (StringUtils.equals(nowGuy.getStatus(), "D")) {
+				System.out.println("死亡");
+
+				nowRound = setNowGuy(++nowRound);
+			}
+
+		}
+		System.out.println("nowRound ==" + nowRound + "guy  " + nowGuy.getLoc());
+		return nowRound;
+
 	}
 
 	private void showMessage(JFrame frame, String msg, int time) {
@@ -280,12 +310,11 @@ public class GameController {
 		}, time);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.addWindowListener(new WindowListener() {
-		
 
 			@Override
 			public void windowOpened(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -298,38 +327,37 @@ public class GameController {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				GameController.getButtonController().get("dice").setEnabled(true);
-				
+
 			}
 
 			@Override
 			public void windowIconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowActivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-	
 
-	dialog.setModal(false);
-	dialog.setVisible(true);
-	GameController.getButtonController().get("dice").setEnabled(true);
+		dialog.setModal(false);
+		dialog.setVisible(true);
+		GameController.getButtonController().get("dice").setEnabled(true);
 
 	}
 
@@ -347,6 +375,7 @@ public class GameController {
 		JButton jbutton1 = new JButton("Yes");
 		JButton jbutton2 = new JButton("NO");
 		Player nowGuy = GameController.getPlayerMap().get(nowRound);
+		System.out.println("第" + nowRound + "位玩家建立土地" + nowGuy.getLoc());
 
 		op.setOptions(new Object[] { jbutton1, jbutton2 });
 
@@ -359,44 +388,45 @@ public class GameController {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowClosing(WindowEvent e) {
 				GameController.getButtonController().get("dice").setEnabled(true);
-				
+
 			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
 				GameController.getButtonController().get("dice").setEnabled(true);
-				
+
 			}
 
 			@Override
 			public void windowIconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowActivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
-			}});
+
+			}
+		});
 		if (time != 0) {
 			// 建立一個新計時器
 			Timer timer = new Timer();
@@ -415,11 +445,11 @@ public class GameController {
 		dialog.setVisible(true);
 		jbutton1.addActionListener(new ActionListener() {
 
-	@Override
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				GameController.getButtonController().get("dice").setEnabled(true);
 
-				System.out.println("Yes");
+				System.out.println("Yes" + nowGuy.getLoc() + "___" + GameController.getNowLoc());
 				GridObject grid = GameController.getGridData().get(nowGuy.getLoc());
 				grid.setBelong(nowRound);
 				grid.setLevel(grid.getLevel() + 1);
@@ -495,8 +525,8 @@ public class GameController {
 		GameController.nowRound = nowRound;
 	}
 
-	public void setPlusRound() {
-		GameController.nowRound += 1;
+	public void setPlusRound(int value) {
+		GameController.nowRound += value;
 	}
 
 	public static void setinit() {

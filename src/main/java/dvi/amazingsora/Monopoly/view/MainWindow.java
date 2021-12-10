@@ -1,7 +1,6 @@
 package dvi.amazingsora.Monopoly.view;
 
 import java.awt.EventQueue;
-import java.util.HashMap;
 
 import javax.swing.JFrame;
 

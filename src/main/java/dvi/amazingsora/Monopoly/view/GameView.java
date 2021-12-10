@@ -94,8 +94,9 @@ public class GameView extends JPanel implements ActionListener, ChangeListener {
 
 
 					// 骰子數
-					SecureRandom objSecureRandom = new SecureRandom();
-					int random = objSecureRandom.nextInt(6) + 1;
+//					SecureRandom objSecureRandom = new SecureRandom();
+//					int random = objSecureRandom.nextInt(6) + 1;
+					int random = 2;
 					System.out.println("骰出 " + random + " 點");
 					dicemun = random;
 
@@ -128,9 +129,14 @@ public class GameView extends JPanel implements ActionListener, ChangeListener {
 			if (e.getSource() == timer) {
 				if (dicemun == 0) {
 					timer.stop();
-					GameController.INSTANCE.launchEffect(frame);
+					try {
+						GameController.INSTANCE.launchEffect(frame);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					// 下一回合設定
-					GameController.INSTANCE.setPlusRound();
+					GameController.INSTANCE.setPlusRound(1);
 
 				} else {
 					GameController.INSTANCE.move();

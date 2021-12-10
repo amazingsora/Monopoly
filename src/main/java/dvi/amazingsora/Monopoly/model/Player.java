@@ -96,4 +96,11 @@ public class Player {
 		this.iconLabel = iconLabel;
 	}
 
+	@Override
+	public String toString() {
+		return "Player [lifePoint=" + lifePoint + ", name=" + name + ", status=" + status + ", money=" + money
+				+ ", isTurn=" + isTurn + ", loc=" + loc + ", iconLabel=" + iconLabel + ", icon=" + icon + "]";
+	}
+	
+
 }
