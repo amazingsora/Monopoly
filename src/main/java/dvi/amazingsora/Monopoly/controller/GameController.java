@@ -10,7 +10,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -47,6 +46,8 @@ public class GameController {
 	public static Map<Integer, JTextField> Assets;
 	// 按鈕控制
 	public static Map<String, JButton> buttonController;
+	
+	public static int livePlayer = 4;
 
 	// 玩家邊框色
 	Color border[] = { Color.MAGENTA, Color.blue, Color.GREEN, Color.ORANGE };
@@ -67,7 +68,7 @@ public class GameController {
 		setPlayerMap(new HashMap<Integer, Player>());
 		setAssets(new HashMap<Integer, JTextField>());
 		for (int i = 0; i < playCount; i++) {
-			Player player = new Player(4000, "player" + (i + 1), "LIVE", 900, false, 0);
+			Player player = new Player(4000, "player" + (i + 1), "LIVE", 100, false, 0);
 			Border line = BorderFactory.createLineBorder(border[i]);
 
 			try {
@@ -160,9 +161,10 @@ public class GameController {
 			}
 		}
 		nowRound = setNowGuy(nowRound);
-		
-		System.out.println("move ===>"+nowRound);
+		this.nowGuy =  GameController.getPlayerMap().get(nowRound);
 		Player nowGuy = this.nowGuy;
+		System.out.println(nowGuy);
+		System.out.println("move nowGuy 當前位置"+nowGuy.getLoc());
 		// 骰子數
 		int loc = nowGuy.getLoc() + 1;
 
@@ -171,13 +173,11 @@ public class GameController {
 		}
 		int length = DataSaveObject.getCoordinateMap().get(loc).getLength();
 		int width = DataSaveObject.getCoordinateMap().get(loc).getWidth();
-		System.out.println("地圖參數 length===" + length + ", width===" + width);
-		System.out.println("nowGuy.getLoc() ===" + nowGuy.getLoc());
 		GameController.getPlayerMap().get(nowRound).getIconLabel().setBounds(width + locX[nowRound],
 				length + locY[nowRound], 20, 15);
 
 		nowGuy.setLoc(loc);
-		System.out.println("第" + nowRound + "位位置" + nowGuy.getLoc());
+		System.out.println("第" + nowRound + "號玩家 現在在: " + nowGuy.getLoc());
 	}
 
 	public void setPlayLocIcon(JLayeredPane gameView) {
@@ -206,6 +206,7 @@ public class GameController {
 		}
 
 		nowRound = setNowGuy(nowRound);
+		this.nowGuy =  GameController.getPlayerMap().get(nowRound);
 		Player nowGuy = this.nowGuy;
 		if (nowRound == 999) {
 
@@ -254,11 +255,22 @@ public class GameController {
 					JTextField momeyField = getAssets().get(nowRound);
 					momeyField.setText("BROKEN");
 					String msg = "第" + nowRound + "位玩家的 破產";
+					setLivePlayer(getLivePlayer()-1);
 
 					System.out.println(msg);
 					showMessage(frame, msg, 3000);
 					nowGuy.setStatus("D");
-					GameController.getButtonController().get("dice").setEnabled(true);
+					if(getLivePlayer()==1) {
+						showMessage(frame, "結束遊戲", 3000);
+
+						GameController.getButtonController().get("dice").setEnabled(false);
+						
+					}else {
+						
+						GameController.getButtonController().get("dice").setEnabled(true);
+
+						
+					}
 
 				}
 
@@ -267,7 +279,7 @@ public class GameController {
 	}
 
 	private int setNowGuy(int nowRound) {
-		System.out.println(nowRound);
+		System.out.println("當前回合==>"+nowRound);
 
 		if (nowRound >= DataSaveObject.getSetting().getPlayerCount()) {
 			nowRound = nowRound - DataSaveObject.getSetting().getPlayerCount();
@@ -279,13 +291,13 @@ public class GameController {
 			this.nowGuy = GameController.getPlayerMap().get(nowRound);
 
 			if (StringUtils.equals(nowGuy.getStatus(), "D")) {
-				System.out.println("死亡");
+				System.out.println("第"+nowRound+"玩家 已失敗");
 
 				nowRound = setNowGuy(++nowRound);
 			}
 
 		}
-		System.out.println("nowRound ==" + nowRound + "guy  " + nowGuy.getLoc());
+		System.out.println("setNowGuy ===>nowRound"+nowRound);
 		return nowRound;
 
 	}
@@ -581,4 +593,16 @@ public class GameController {
 		GameController.buttonController = buttonController;
 	}
 
+
+
+	public static int getLivePlayer() {
+		return livePlayer;
+	}
+
+
+
+	public static void setLivePlayer(int livePlayer) {
+		GameController.livePlayer = livePlayer;
+	}
+	
 }

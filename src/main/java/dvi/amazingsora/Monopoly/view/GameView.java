@@ -43,6 +43,9 @@ public class GameView extends JPanel implements ActionListener, ChangeListener {
 		// 設定當前回合
 		GameController.setinit();
 
+		//設定起始人數
+		
+		GameController.setLivePlayer(DataSaveObject.getSetting().getPlayerCount());
 		frame = new JFrame();
 		this.frame = frame;
 		frame.setBounds(100, 100, 950, 800);
